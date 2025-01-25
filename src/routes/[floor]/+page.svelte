@@ -6,7 +6,8 @@
     import { onMount } from 'svelte';
     //compoenet 
     import ImageGenerator from '$lib/components/AI_imagegen.svelte';
-    //import MintNft from '$lib/components/MintNFT.svelte';
+    import MintNft from '$lib/components/MintNFT.svelte';
+    // vals set 
     let floor: Floor | null = null;
     let error: string | null = null;
     let floorParam: string;
@@ -75,9 +76,9 @@
             <Button href="/">Back to Lobby</Button>
         </Card>
         <ImageGenerator roomStyle={selectedRoom} floorStyle={floor.style} />
-      <!--<MintNft/>-->  
+        <MintNft/> 
     </div>
-
+   
 
     {:else if error}
     <div class="container mx-auto p-4 flex justify-center items-center min-h-screen">
@@ -88,3 +89,4 @@
 {:else}
     <p>Loading...</p>
 {/if}
+
