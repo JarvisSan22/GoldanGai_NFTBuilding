@@ -43,7 +43,7 @@
             date: new Date(),
             author: "TEST",
             path: window.location.pathname,
-                      id: items.length, 
+            id: items.length, 
           })
           return items
         })
@@ -70,8 +70,9 @@
     floorImages = $imageStore.filter((i) => i.path === window.location.pathname)
   })
 
-  function toggleSelectionImage(value: number) {
+  function toggleSelectionImage(value: number,id:number) {
     selectedImage = value
+    mintImageId.set(id)
   }
 </script>
 
@@ -121,7 +122,7 @@
               <input
                 type="checkbox"
                 class="border p-2"
-                on:change={() => toggleSelectionImage(index)}
+                on:change={() => toggleSelectionImage(index,fI.id)}
                 checked={selectedImage == index}
               />
               Generated Image
