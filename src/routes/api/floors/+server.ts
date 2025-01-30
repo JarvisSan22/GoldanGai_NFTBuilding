@@ -27,24 +27,9 @@ export async function GET({ url }) {
       headers: { 'Content-Type': 'application/json' }
     })
   }
-  const floorName = url.searchParams.get('floorName') || 'lobby'
 
-  const floor = floors.find(f => f.floorName === floorName)
-
-  if (!floor) {
-    return new Response(JSON.stringify({ error: 'Floor not found' }), {
-      status: 404,
-      headers: { 'Content-Type': 'application/json' }
-    })
-  }
-
-  return json(floor)
   return json(floor)
 }
-
-// export async function GET_ALL() {
-//     return json(floors);
-// }
 
 // export async function GET_ALL() {
 //     return json(floors);
