@@ -6,7 +6,31 @@
     SidebarItem,
     Button,
     Toggle,
+    Drawer,
+    CloseButton,
   } from "flowbite-svelte"
+  import { page } from "$app/stores"
+
+  import {
+    ChartPieSolid,
+    CartSolid,
+    GridSolid,
+    MailBoxSolid,
+    UsersSolid,
+    ShoppingBagSolid,
+    ArrowRightToBracketOutline,
+    EditOutline,
+    ArrowLeftOutline,
+  } from "flowbite-svelte-icons"
+  import { sineIn } from "svelte/easing"
+  let hidden2 = true
+  let spanClass = "flex-1 ms-3 whitespace-nowrap"
+  let transitionParams = {
+    x: -320,
+    duration: 200,
+    easing: sineIn,
+  }
+
   import { floorNames } from "$lib/get_floor_api"
   import { onMount } from "svelte"
   import "../app.css"
@@ -55,44 +79,52 @@
 </script>
 
 <div class="header flex items-center justify-between bg-primary">
-  <ToggleButton {toggleSidebar} />
-
-  <h1 class="text-center flex-grow text-white text-lg font-bold">
+  <ToggleButton toggleSidebar={() => (hidden2 = false)} />
+  {#if $page.url.pathname.includes("floor-")}
+    <Button href="/" size="sm" class="absolute left-20"
+      ><ArrowLeftOutline /><span class="hidden md:block">Back to Lobby</span
+      ></Button
+    >
+  {/if}
+  <h1 class="text-center flex-grow text-lg font-bold">
     GoldenGai AI gen party
   </h1>
 
   <WalletConnectV2 />
 </div>
 <div class="flex h-screen">
-  <Sidebar
-    class="fixed bg-white text-dark dark:bg-black dark:text-white top-0 -left-80 md:-left-80 h-screen w-80 md:w-80 transition-transform z-10 {sidebarOpen
-      ? 'translate-x-80 md:translate-x-80'
-      : ''}"
+  <Drawer
+    transitionType="fly"
+    {transitionParams}
+    bind:hidden={hidden2}
+    id="sidebar2"
   >
-    <SidebarGroup>
-      <ToggleButton {toggleSidebar} />
-      {#each floorNames as floor}
-        <SidebarItem
-          href={floor.floorName === "lobby" ? "/" : `/${floor.floorName}`}
-          label={floor.floorName === "lobby"
-            ? "Lobby"
-            : floor.floorName.replace("floor-", "Floor ")}
-          on:click={toggleSidebar}
-        />
-      {/each}
-      <div class="mr-2">
-        <label for="theme-toggle" class="flex ms-5 mt-8">
-          <span class="mr-2">DarkTheme</span>
-          <Toggle
-            checked={darkMode}
-            on:click={handleSwitchDarkMode}
-            type="checkbox"
-            id="theme-toggle"
+    <Sidebar class="">
+      <SidebarGroup>
+        <ToggleButton toggleSidebar={() => (hidden2 = true)} />
+        {#each floorNames as floor}
+          <SidebarItem
+            href={floor.floorName === "lobby" ? "/" : `/${floor.floorName}`}
+            label={floor.floorName === "lobby"
+              ? "Lobby"
+              : floor.floorName.replace("floor-", "Floor ")}
+            on:click={toggleSidebar}
           />
-        </label>
-      </div>
-    </SidebarGroup>
-  </Sidebar>
+        {/each}
+        <div class="mr-2">
+          <label for="theme-toggle" class="flex ms-5 mt-8">
+            <span class="mr-2">DarkTheme</span>
+            <Toggle
+              checked={darkMode}
+              on:click={handleSwitchDarkMode}
+              type="checkbox"
+              id="theme-toggle"
+            />
+          </label>
+        </div>
+      </SidebarGroup>
+    </Sidebar>
+  </Drawer>
 
   <main class="flex-grow relative p-4">
     <div class="z-50">

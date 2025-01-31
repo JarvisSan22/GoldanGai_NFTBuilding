@@ -52,6 +52,6 @@
   </div>
 {:else}
   <Button class="button connect" on:click={connectWallet}>
-    {ButtonText}
+    Connect wallet
   </Button>
 {/if}

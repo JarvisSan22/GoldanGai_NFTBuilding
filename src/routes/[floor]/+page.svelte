@@ -1,52 +1,44 @@
 <script lang="ts">
   import { page } from "$app/stores"
-  import { Card, Button } from "flowbite-svelte"
   import { getFloorDetails, type Floor } from "$lib/get_floor_api"
+  import { Button, Card } from "flowbite-svelte"
   import { onMount } from "svelte"
-  //compoenet
   import ImageGenerator from "$lib/components/AI_imagegen.svelte"
-  import { AccordionItem, Accordion } from "flowbite-svelte"
-
-  //import MintNft from '$lib/components/MintNFT.svelte';
+  import { Accordion, AccordionItem } from "flowbite-svelte"
+  import { settingStore } from "../../stores/settingsStore"
   let floor: Floor | null = null
   let error: string | null = null
   let floorParam: string
-  let selectedRoom: string = ""
 
   onMount(async () => {
     try {
       floorParam = $page.params.floor
-
-      console.log("Fetching floor:", floorParam)
-
       const response = await getFloorDetails(floorParam)
       if (!response.ok) {
-        // If the response isn't OK, show an error
         throw new Error("Failed to fetch floor details")
       }
-      floor = await response.json() // Parse the JSON data returned from getFloorDetails
-      console.log("Fetched floor details:", floor?.floorName)
+      floor = await response.json()
     } catch (err) {
       error = "Failed to fetch floor details"
       console.error("Fetch error:", err)
     }
   })
 
-  // Function to handle room selection
   function toggleSelection(roomStyle: string) {
-    // If the room is already selected, deselect it; otherwise, select the new room
-    if (selectedRoom === roomStyle) {
-      selectedRoom = ""
-    } else {
-      selectedRoom = roomStyle
-    }
+    console.log(roomStyle)
+    settingStore.set({
+      ...$settingStore,
+      [$page.params.floor]: {
+        roomStyle: roomStyle,
+      },
+    })
   }
 </script>
 
 {#if floor}
   <div class="flex flex-wrap justify-center min-h-full w-full">
-    <Card class="" size="lg" padding="xl">
-      <h1 class="text-3xl font-bold mb-4">
+    <Card size="lg" class="mx-3 mb-5 xl:mb-0">
+      <h1 class="text-3xl font-bold mb-4 text-black dark:text-white">
         {$page.params.floor === "lobby"
           ? "Lobby"
           : $page.params.floor.replace("floor-", "Floor ")}
@@ -56,30 +48,40 @@
 
       <div class="mt-8">
         <h2 class="text-2xl font-semibold mb-4">Rooms</h2>
-        <Accordion>
+        <Accordion multiple>
           {#each floor.rooms as room, index}
-            <AccordionItem open={index == 0}>
-              <span slot="header">{room.roomName}</span>
-              <input
-                type="checkbox"
-                class="right-2"
-                on:change={() => toggleSelection(room.roomName)}
-                checked={selectedRoom === room.roomName}
-              />
+            <AccordionItem
+              open={$settingStore[$page.params.floor]?.roomStyle ==
+                room.roomName || index === 0}
+            >
+              <span slot="header"> {room.roomName}</span>
               <p>{room.description}</p>
 
               {#if room.room_prompt}
                 <p><strong>Style:</strong> {room.room_prompt}</p>
               {/if}
+
+              <div class="mt-3">
+                <Button
+                  outline={$settingStore[$page.params.floor]?.roomStyle ===
+                    room.roomName}
+                  on:click={(e: any) => {
+                    toggleSelection(room.roomName)
+                  }}>Select room</Button
+                >
+              </div>
             </AccordionItem>
           {/each}
         </Accordion>
       </div>
-
-      <Button href="/">Back to Lobby</Button>
     </Card>
-    <ImageGenerator roomStyle={selectedRoom} floorStyle={floor.style!} />
-    <!--<MintNft/>-->
+
+    <Card size="lg" class="mx-3">
+      <ImageGenerator
+        roomStyle={$settingStore[$page.params.floor]?.roomStyle}
+        floorStyle={floor.style!}
+      />
+    </Card>
   </div>
 {:else if error}
   <div

@@ -64,23 +64,15 @@
             .toLowerCase()
             .includes(searchFilter.toLowerCase()))) as floor}
       <Card href={`/${floor.floorName}`} class="hover:bg-primary-50 max-w-xl">
-        <h5
-          class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-3"
-        >
+        <h5 class="text-2xl font-bold tracking-tight dark:text-white mb-3">
           {floor.floorName.replace("floor-", "Floor ")}
         </h5>
-        <p
-          class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight"
-        >
+        <p class="mb-3 font-normal leading-tight">
           Style: <code>{floor.style}</code><br />
           Rooms: <code>{floor.rooms.length}</code>
         </p>
-        <p
-          class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight"
-        ></p>
-        <p
-          class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight"
-        >
+        <p class="mb-3 font-normal leading-tight"></p>
+        <p class="mb-3 font-normal leading-tight">
           {floor.description}
         </p>
         <a
@@ -95,9 +87,7 @@
 
     {#if lobbyDetails}
       <Card class="max-w-xl">
-        <h5
-          class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
-        >
+        <h5 class="text-2xl font-bold tracking-tight dark:text-white">
           Lobby Details
         </h5>
         <p>{lobbyDetails.description}</p>
