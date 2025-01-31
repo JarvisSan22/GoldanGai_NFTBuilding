@@ -4,8 +4,7 @@ import { writable } from 'svelte/store'
 // Define the type for an setting object
 export interface Setting {
   roomStyle: string;
-  floorStyle: string;
-  imageurl: string;
+  imageurl?: string;
 }
 
 // Helper function to check if localStorage is available
