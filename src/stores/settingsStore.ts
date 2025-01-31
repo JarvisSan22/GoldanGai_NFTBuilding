@@ -19,11 +19,9 @@ function isLocalStorageAvailable() {
   }
 }
 
-// Load initial data from localStorage if available
 let initialSettingStore: {
   [key: string]: Setting;
 } = {};
-
 
 
 if (browser) {
